@@ -1,5 +1,7 @@
 package me.cqptain.jef.datatypes;
 
+import me.cqptain.jef.Jef;
+
 import java.util.ArrayList;
 
 public class JefDataTypesManager {
@@ -10,12 +12,12 @@ public class JefDataTypesManager {
         dataTypes.add(dataType);
     }
 
-    public JefDataType getDataType(String value){
+    public JefDataType getDataType(String value, Jef jef){
 
         JefDataType[] returnDataType = {};
 
         dataTypes.forEach(dataType -> {
-            if(dataType.check(value)){
+            if(dataType.check(value, jef)){
                 returnDataType[0] = dataType;
             }
         });

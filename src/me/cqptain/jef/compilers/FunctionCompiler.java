@@ -19,9 +19,8 @@ public class FunctionCompiler implements Compiler {
 
     public Boolean check(Integer line, String[] lines){
 
-        if(lines[line].contains("(") && lines[line].contains(")")){
-            Character character = '(';
-            if(this.jef.functions.functions.containsKey(lines[line].split(character.toString())[0])){
+        if(lines[line].contains("\\(") && lines[line].contains("\\)")){
+            if(this.jef.functions.functions.containsKey(lines[line].split("\\(")[0])){
                 return true;
             } else {
                 return true;
@@ -34,10 +33,9 @@ public class FunctionCompiler implements Compiler {
 
     public Outcome run(Integer line, String[] lines) {
 
-        Outcome outcome = new Outcome(OutcomeType.SUCCESS);
-        outcome.message = "this is just a test";
 
-        return outcome;
+
+        return new Outcome(OutcomeType.SUCCESS);
 
     }
 
