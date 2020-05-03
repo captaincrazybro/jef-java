@@ -1,7 +1,9 @@
 package me.cqptain.jef;
 
 import me.cqptain.jef.compilers.Compiler;
+import me.cqptain.jef.compilers.FunctionCompiler;
 import me.cqptain.jef.compilers.Variable;
+import me.cqptain.jef.datatypes.JefDataTypesManager;
 import me.cqptain.jef.functions.Functions;
 
 import java.util.ArrayList;
@@ -15,8 +17,10 @@ public class Jef {
     ArrayList<Compiler> compilers;
     String[] lines = {""};
     public Functions functions;
+    public JefDataTypesManager dataTypeManager;
 
     public Jef(File file){
+        JefDataTypesManager.enable();
         this.readFile(file).toArray(this.lines);
         this.compilers = this.getCompilers();
         this.functions = new Functions(this);
@@ -24,10 +28,13 @@ public class Jef {
     }
 
     public Jef(String code){
+        JefDataTypesManager.enable();
         ArrayList<String> lines = new ArrayList<String>();
         Collections.addAll(lines, code.split("\n"));
         lines.toArray(this.lines);
         this.compilers = this.getCompilers();
+        this.functions = new Functions(this);
+        functions.registerFunctions();
     }
 
     public void compile() throws InvalidJefFileSyntax {
@@ -59,6 +66,7 @@ public class Jef {
         ArrayList<Compiler> compilers = new ArrayList<>();
 
         compilers.add(new Variable());
+        compilers.add(new FunctionCompiler(this));
 
         return compilers;
     }

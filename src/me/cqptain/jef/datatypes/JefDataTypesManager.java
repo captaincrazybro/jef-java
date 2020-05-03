@@ -8,11 +8,15 @@ public class JefDataTypesManager {
 
     public static ArrayList<JefDataType> dataTypes = new ArrayList<>();
 
-    public void register(JefDataType dataType){
+    public static void enable(){
+
+    }
+
+    public static void register(JefDataType dataType){
         dataTypes.add(dataType);
     }
 
-    public JefDataType getDataType(String value, Jef jef){
+    public static JefDataType getDataType(String value, Jef jef){
 
         JefDataType[] returnDataType = {};
 
