@@ -5,6 +5,7 @@ import me.cqptain.jef.compilers.FunctionCompiler;
 import me.cqptain.jef.compilers.Variable;
 import me.cqptain.jef.datatypes.JefDataTypesManager;
 import me.cqptain.jef.functions.Functions;
+import me.cqptain.jef.compilers.DefineFunctionCompiler;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -66,6 +67,7 @@ public class Jef {
         ArrayList<Compiler> compilers = new ArrayList<>();
 
         compilers.add(new Variable());
+        compilers.add(new DefineFunctionCompiler(this));
         compilers.add(new FunctionCompiler(this));
 
         return compilers;

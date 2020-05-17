@@ -8,6 +8,7 @@ import me.cqptain.jef.datatypes.JefDataType;
 import me.cqptain.jef.datatypes.JefDataTypesManager;
 import me.cqptain.jef.functions.Function;
 import me.cqptain.jef.functions.Functions;
+import me.cqptain.jef.compilers.Compiler;
 
 import java.io.*;
 import java.lang.reflect.Array;
@@ -27,16 +28,13 @@ public class FunctionCompiler implements Compiler {
 
     public Boolean check(Integer line, String[] lines){
 
-        if(lines[line].contains("\\(") && lines[line].contains("\\)")){
-            if(this.jef.functions.functions.containsKey(lines[line].split("\\(")[0])){
-                System.out.println("hi");
+        if(lines[line].contains("\\(") && lines[line].split("\\(")[1].contains("\\)")){
+            //if(this.jef.functions.functions.containsKey(lines[line].split("\\(")[0])){
                 return true;
-            } else {
-                System.out.println("hi");
-                return false;
-            }
+            //} else {
+            //    return false;
+            //}
         } else {
-            System.out.println("no");
             return false;
         }
 
@@ -59,6 +57,9 @@ public class FunctionCompiler implements Compiler {
                 }
                 try {
                     function.run(paramDatas);
+                    Outcome outcome = new Outcome(OutcomeType.RETURN);
+                    outcome.returns = line++;
+                    return outcome;
                 } catch(InvalidJefFileSyntax e){
                     Outcome outcome = new Outcome(OutcomeType.ERROR);
                     outcome.exception = e;
@@ -74,8 +75,6 @@ public class FunctionCompiler implements Compiler {
             outcome.exception = new InvalidJefFileSyntax("This function does not exist");
             return outcome;
         }
-
-        return new Outcome(OutcomeType.SUCCESS);
 
     }
 

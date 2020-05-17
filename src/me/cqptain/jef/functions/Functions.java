@@ -23,4 +23,8 @@ public class Functions {
 
     }
 
+    public void registerFunction(String functionName, Function function){
+      this.functions.put(functionName, function);
+    }
+
 }
