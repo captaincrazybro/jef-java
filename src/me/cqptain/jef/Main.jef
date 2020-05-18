@@ -1,0 +1,4 @@
+logError()
+  log("Error")
+|
+logError()
