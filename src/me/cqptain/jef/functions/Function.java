@@ -2,7 +2,7 @@
 
 //import me.cqptain.jef.InvalidJefFileSyntax;
 
-//import java.util.function.Consumer;
+import java.util.function.Consumer;
 
 public class Function {
 

@@ -47,6 +47,18 @@ public class Variable implements Compiler {
         String variableName;
         Object value;
 
+        if(variables.containsKey(variableName)){
+          Outcome outcome = new Outcome(OutcomeType.ERROR);
+          outcome.exception = new InvalidJefFileSyntax("Variable name already exists - Line" + line);
+          return outcome;
+        }
+
+        if(Character.isDigit(variableName.charAt(0))){
+          Outcome outcome = new Outcome(OutcomeType.ERROR);
+          outcome.exception = new InvalidJefFileSyntax("Variable can't start with number - Line" + line);
+          return outcome;
+        }
+
         if(isFirstCheck || isSecondCheck) {
             variableName = lineRows[1];
             value = lineRows[3];

@@ -2,6 +2,7 @@
 
 //import me.cqptain.jef.Jef;
 
+import java.util.function.Consumer;
 import java.util.HashMap;
 
 public class Functions {

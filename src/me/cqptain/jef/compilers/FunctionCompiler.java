@@ -27,8 +27,7 @@ public class FunctionCompiler implements Compiler {
     }
 
     public Boolean check(Integer line, String[] lines){
-
-        if(lines[line].contains("\\(") && lines[line].split("\\(")[1].contains("\\)")){
+        if(lines[line].contains("(") && lines[line].split("\\(")[1].contains(")")){
             //if(this.jef.functions.functions.containsKey(lines[line].split("\\(")[0])){
                 return true;
             //} else {
@@ -44,7 +43,13 @@ public class FunctionCompiler implements Compiler {
 
         String name = lines[line].split("\\(")[0];
 
-        String[] params = lines[line].split("\\(")[1].split("\\)")[0].replace(" ", "").split(",");
+        System.out.println(lines[line].split("\\(")[1]);
+
+        String[] params = {""};
+        
+        if(lines[line].split("\\(")[1].split("\\)").length != 0){
+          params = lines[line].split("\\(")[1].split("\\)")[0].replace(" ", "").split(",");
+        }
 
         if(this.jef.functions.functions.containsKey(name)){
             Function function = this.jef.functions.functions.get(name);
@@ -67,12 +72,12 @@ public class FunctionCompiler implements Compiler {
                 }
             } else {
                 Outcome outcome = new Outcome(OutcomeType.ERROR);
-                outcome.exception = new InvalidJefFileSyntax("Invalid number of parameters");
+                outcome.exception = new InvalidJefFileSyntax("Invalid number of parameters - Line: " + line);
                 return outcome;
             }
         } else {
             Outcome outcome = new Outcome(OutcomeType.ERROR);
-            outcome.exception = new InvalidJefFileSyntax("This function does not exist");
+            outcome.exception = new InvalidJefFileSyntax("This function does not exist - Line: " + line);
             return outcome;
         }
 

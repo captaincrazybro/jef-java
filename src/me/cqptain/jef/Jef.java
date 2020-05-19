@@ -22,7 +22,7 @@ public class Jef {
 
     public Jef(File file){
         JefDataTypesManager.enable();
-        this.readFile(file).toArray(this.lines);
+        this.lines = this.readFile(file).toArray(this.lines);
         this.compilers = this.getCompilers();
         this.functions = new Functions(this);
         functions.registerFunctions();
@@ -46,19 +46,23 @@ public class Jef {
 
         while(line[0] != this.lines.length){
             int i = 0;
+            Integer[] newLine = {0};
             while(i < compilers.size()){
                 Compiler compiler = compilers.get(i);
                 if(compiler.check(line[0], linesBrac)){
                     Outcome outcome = compiler.run(line[0], linesBrac);
                     if(outcome.getOutcomeType() == OutcomeType.ERROR){
-                        throw new InvalidJefFileSyntax(outcome.message);
+                        throw outcome.exception;
                     }
-                    line[0] = (Integer) outcome.returns;
-                    return;
+                    newLine[0] = (Integer) outcome.returns;
                 }
                 i++;
             }
-            line[0]++;
+            if(newLine[0] == 0){
+              line[0]++;
+            } else {
+              line[0] = newLine[0];
+            }
         }
 
     }
@@ -79,7 +83,8 @@ public class Jef {
             Scanner fileScanner = new Scanner(file);
             ArrayList<String> linesList = new ArrayList<String>();
             while (fileScanner.hasNextLine()) {
-                linesList.add(fileScanner.nextLine());
+                String nextLine = fileScanner.nextLine();
+                linesList.add(nextLine);
             }
             return linesList;
         } catch (FileNotFoundException e){
@@ -89,7 +94,7 @@ public class Jef {
     }
 
     public static Jef getJefFromFileName(String fileName){
-        File file = new File(Jef.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "/" + fileName);
+        File file = new File(Jef.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "/jef/src/me/cqptain/jef/" + fileName);
 
         if(!file.exists()) return null;
 

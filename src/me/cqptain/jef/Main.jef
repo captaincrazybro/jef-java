@@ -1,4 +1,3 @@
-logError()
+logError() ->
   log("Error")
-|
-logError()
+logError() 

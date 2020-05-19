@@ -2,7 +2,7 @@
 
 public class Outcome {
 
-    public Exception exception;
+    public InvalidJefFileSyntax exception;
     public Boolean success;
     public String message;
     public Object returns;

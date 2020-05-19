@@ -1,4 +1,4 @@
-package me.cqptain.jef;
+//package me.cqptain.jef;
 
 public class InvalidJefFileSyntax extends Exception {
 

@@ -26,8 +26,7 @@ public class DefineFunctionCompiler implements Compiler {
     }
 
     public Boolean check(Integer line, String[] lines){
-
-        if(lines[line].contains("\\(") && lines[line].contains("\\)") && hasEnding(line, lines)){
+        if(lines[line].contains("(") && lines[line].split("\\(")[1].contains(")") && lines[line].split("\\(")[1].split(" ")[1].equals("->")/* && hasEnding(line, lines)*/){
             //if(!this.jef.functions.functions.containsKey(lines[line].split("\\(")[0])){
                 return true;
             //} else {
@@ -41,50 +40,53 @@ public class DefineFunctionCompiler implements Compiler {
 
     public Outcome run(Integer line, String[] lines) {
 
-        String name = lines[line].split("\\(")[0].replace("function ", "");
+        String name = lines[line].split("\\(")[0].replace("function ", "").replace("func ", "");
+
+        int indent = getIndent(lines[line + 1]);
 
         String[] params = lines[line].split("\\(")[1].split("\\)")[0].replace(" ", "").split(",");
 
         if(!this.jef.functions.functions.containsKey(name)){
             int i = line + 1;
             String retrievedCode = "";
-            while(!lines[i].contains("|") && i < params.length){
-              retrievedCode += lines[i] + "\n";
+            while(!lines[i].startsWith(multiplyString(" ", indent)) && i < lines.length){
+              retrievedCode += lines[i].replace(multiplyString(" ", indent), "") + "\n";
               i++;
             }
             String[] code = {retrievedCode};
+            Integer[] i2 = {0};
             Function function = new Function(name, ps -> {
-              int i2 = 0;
-              while(i2 < ps.length){
-                if(ps[i2] instanceof String){
-                  ps[i2] = "\"" + ps[i2] + "\"";
+              while(i2[0] < ps.length){
+                if(ps[i2[0]] instanceof String){
+                  ps[i2[0]] = "\"" + ps[i2[0]] + "\"";
                 }
-                code[i2] = params[i2] + " = " + ps[i2] + "\n" + code[i2];
-                Jef functionJef = new Jef(code[i2]);
+                code[i2[0]] = params[i2[0]] + " = " + ps[i2[0]] + "\n" + code[i2[0]];
+                Jef functionJef = new Jef(code[i2[0]]);
                 try {
                   functionJef.compile();
                 } catch (InvalidJefFileSyntax e){
                   e.printStackTrace();
                 }
-                i2++;
+                i2[0]++;
               }
             }, params.length);
             this.jef.functions.registerFunction(name, function);
             Outcome outcome = new Outcome(OutcomeType.RETURN);
-            outcome.returns = line++;
+            outcome.returns = i;
             return outcome;
         } else {
             Outcome outcome = new Outcome(OutcomeType.ERROR);
-            outcome.exception = new InvalidJefFileSyntax("This function name is already taken");
+            outcome.exception = new InvalidJefFileSyntax("This function name is already taken - Line: " + line);
             return outcome;
         }
 
     }
 
-    private static Boolean hasEnding(Integer staringLine, String[] lines){
-      int i = staringLine;
+    /*private static Boolean hasEnding(Integer startingLine, String[] lines){
+      int i = startingLine;
       while(i < lines.length){
-        if(lines[i].contains("(") && lines[i].split(")")[1].contains(")")){
+        System.out.println(lines[i]);
+        if(lines[i].contains("(") && lines[i].split("\\(")[1].contains(")")){
           return false;
         } else if(lines[i].contains("|")){
           return true;
@@ -92,6 +94,23 @@ public class DefineFunctionCompiler implements Compiler {
         i++;
       }
       return false;
+    }*/
+
+    private static Integer getIndention(String string){
+      int i = 0;
+      while(string.charAt(i) == " "){
+        i++;
+      }
+      return i;
+    }
+
+    private static String multiplyString(String string, int amount){
+        int i = 0;
+        String outcome = "";
+        while(i < amount){
+          outcome += string;
+        }
+        return outcome;
     }
 
 }
